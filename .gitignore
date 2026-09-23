@@ -2,6 +2,7 @@
 /.env
 /.env.*
 *.log
+php_errors.log
 Thumbs.db
 Desktop.ini
 .DS_Store
@@ -9,5 +10,6 @@ Desktop.ini
 .vscode/
 *.swp
 *.tmp
-php_errors.log
+/_*.php
 /uploads/**/*.php
+/uploads/products/_stocktmp/

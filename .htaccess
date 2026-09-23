@@ -2,7 +2,7 @@ Options -Indexes
 ServerSignature Off
 AddDefaultCharset UTF-8
 
-<FilesMatch "(^\.htaccess|\.env|config\.local\.php|\.git|composer\.(json|lock)|package(-lock)?\.json|\.sql)$">
+<FilesMatch "(^\.htaccess|\.env|config\.local\.php|\.sql)$">
     Require all denied
 </FilesMatch>
 
@@ -10,8 +10,6 @@ AddDefaultCharset UTF-8
     RewriteEngine On
 
     RewriteRule ^database/ - [F,L]
-
-    RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

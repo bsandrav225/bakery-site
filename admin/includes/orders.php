@@ -106,13 +106,6 @@ if (isset($_GET['view'])) {
             </div>
         <?php endif; ?>
         
-        <?php if (!empty($viewOrder['calculator_data'])): ?>
-            <div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:8px;">
-                <strong>Детали заказа:</strong><br>
-                <pre style="font-size:0.85rem;white-space:pre-wrap;"><?= htmlspecialchars(print_r(json_decode($viewOrder['calculator_data'], true), true)) ?></pre>
-            </div>
-        <?php endif; ?>
-        
         <?php if ($viewOrder['admin_comment']): ?>
             <div style="margin-top:12px;padding:12px;background:#E3F0FF;border-radius:8px;">
                 <strong>Комментарий администратора:</strong><br>

@@ -8,10 +8,4 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 
 // Раскомментируйте, если адрес определяется неправильно.
-// define('SITE_URL', 'http://localhost/d1/');
-
-// define('SMTP_HOST', 'smtp.yandex.ru');
-// define('SMTP_PORT', 465);
-// define('SMTP_USER', '');
-// define('SMTP_PASS', '');
-// define('SMTP_FROM', '');
+// define('SITE_URL', 'http://localhost/bakery/');

@@ -103,7 +103,6 @@ function getOrderStatuses() {
     return [
         'new' => 'Новая',
         'in_progress' => 'В работе',
-        'measure_scheduled' => 'Готовится',
         'closed' => 'Закрыта'
     ];
 }
@@ -112,10 +111,7 @@ function getOrderStatuses() {
 function getOrderTypes() {
     return [
         'call' => 'Обратный звонок',
-        'measure' => 'Предзаказ',
-        'calculate' => 'Расчёт заказа',
-        'order' => 'Заказ с сайта',
-        'calculator' => 'Корпоративный заказ'
+        'order' => 'Заказ с сайта'
     ];
 }
 
@@ -161,21 +157,6 @@ function getProduct($id) {
     $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
     $stmt->execute([$id]);
     return $stmt->fetch();
-}
-
-// Получение материалов
-function getMaterials($brand = null) {
-    global $pdo;
-    $sql = "SELECT * FROM materials WHERE is_active = 1";
-    if ($brand) {
-        $sql .= " AND brand = ?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$brand]);
-    } else {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-    }
-    return $stmt->fetchAll();
 }
 
 // Получение портфолио

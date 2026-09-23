@@ -450,11 +450,6 @@ table tr:hover td {
     color: #2E7DB5;
 }
 
-.status-measure_scheduled {
-    background: #E8F5E9;
-    color: #2E7D32;
-}
-
 .status-closed {
     background: #F5F5F5;
     color: #757575;

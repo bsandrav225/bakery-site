@@ -24,15 +24,8 @@ $youtube = getSetting('youtube') ?? '#';
 $pages = $pdo->query("SELECT * FROM pages WHERE is_visible = 1 ORDER BY sort_order ASC")->fetchAll();
 $categories = getCategories(0);
 
-$seoTitle = $page['meta_title'] ?: ($page['title'] . ' — пекарня «' . $siteName . '» в Москве');
-$seoDescription = $page['meta_description'] ?: (
-    $page['title'] . ' — информация от семейной пекарни «' . $siteName .
-    '». Свежая выпечка, доставка по Москве, работаем с 6:00. ' . $siteAddress
-);
-$seoKeywords = getSetting('seo_keywords') ?? 'пекарня москва, свежий хлеб, доставка выпечки';
-
-$canonicalUrl = rtrim(SITE_URL, '/') . '/page.php?slug=' . rawurlencode($page['slug']);
-$ogImage = getSetting('hero_image') ?? 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1200&h=630&fit=crop';
+$seoTitle = $page['meta_title'] ?: ($page['title'] . ' — ' . $siteName);
+$seoDescription = $page['meta_description'] ?: ($page['title'] . ' — пекарня «' . $siteName . '»');
 $phoneTel = preg_replace('/[^0-9+]/', '', $sitePhone);
 ?>
 <!DOCTYPE html>
@@ -42,71 +35,9 @@ $phoneTel = preg_replace('/[^0-9+]/', '', $sitePhone);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($seoTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDescription) ?>">
-    <meta name="keywords" content="<?= htmlspecialchars($seoKeywords) ?>">
-    <meta name="author" content="<?= htmlspecialchars($siteName) ?>">
-    <meta name="robots" content="index, follow, max-image-preview:large">
-    <meta name="theme-color" content="#C9A87C">
-    <link rel="canonical" href="<?= htmlspecialchars($canonicalUrl) ?>">
-
-    <meta property="og:type" content="article">
-    <meta property="og:locale" content="ru_RU">
-    <meta property="og:site_name" content="<?= htmlspecialchars($siteName) ?>">
-    <meta property="og:title" content="<?= htmlspecialchars($seoTitle) ?>">
-    <meta property="og:description" content="<?= htmlspecialchars($seoDescription) ?>">
-    <meta property="og:url" content="<?= htmlspecialchars($canonicalUrl) ?>">
-    <meta property="og:image" content="<?= htmlspecialchars($ogImage) ?>">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<?= htmlspecialchars($seoTitle) ?>">
-    <meta name="twitter:description" content="<?= htmlspecialchars($seoDescription) ?>">
-    <meta name="twitter:image" content="<?= htmlspecialchars($ogImage) ?>">
-
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <script type="application/ld+json">
-    <?= json_encode([
-        '@context' => 'https://schema.org',
-        '@type' => 'WebPage',
-        'name' => $page['title'],
-        'description' => $seoDescription,
-        'url' => $canonicalUrl,
-        'isPartOf' => [
-            '@type' => 'WebSite',
-            'name' => $siteName,
-            'url' => rtrim(SITE_URL, '/') . '/',
-        ],
-        'about' => [
-            '@type' => 'Bakery',
-            'name' => $siteName,
-            'telephone' => $phoneTel,
-            'address' => [
-                '@type' => 'PostalAddress',
-                'streetAddress' => $siteAddress,
-                'addressLocality' => 'Москва',
-                'addressCountry' => 'RU',
-            ],
-        ],
-        'breadcrumb' => [
-            '@type' => 'BreadcrumbList',
-            'itemListElement' => [
-                [
-                    '@type' => 'ListItem',
-                    'position' => 1,
-                    'name' => 'Главная',
-                    'item' => rtrim(SITE_URL, '/') . '/',
-                ],
-                [
-                    '@type' => 'ListItem',
-                    'position' => 2,
-                    'name' => $page['title'],
-                    'item' => $canonicalUrl,
-                ],
-            ],
-        ],
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?>
-    </script>
 </head>
 <body>
     <div class="scroll-progress" id="scrollProgress"></div>
@@ -164,7 +95,7 @@ $phoneTel = preg_replace('/[^0-9+]/', '', $sitePhone);
 
             <h1 class="static-page-title"><?= htmlspecialchars($page['title']) ?></h1>
 
-            <div class="static-page-content" data-reveal>
+            <div class="static-page-content">
                 <?php if (trim(strip_tags((string)$page['content'])) !== ''): ?>
                     <?= $page['content'] ?>
                 <?php else: ?>

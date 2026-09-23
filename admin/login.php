@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
             
             <div class="login-footer">
-                <p>© 2026 Пекарня «Домашний хлеб»</p>
+                <p>© <?= date('Y') ?> Пекарня «Домашний хлеб»</p>
             </div>
         </div>
     </div>

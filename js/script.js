@@ -121,7 +121,7 @@ function renderProducts(category = 'all') {
 
     menuGrid.innerHTML = filtered.map(product => `
         <div class="menu-item" data-category="${escapeHtml(product.category_slug)}" data-id="${product.id}">
-            <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" class="menu-item-image" loading="lazy">
+            ${product.image ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" class="menu-item-image" loading="lazy">` : ''}
             <div class="menu-item-content">
                 <span class="menu-item-tag">${escapeHtml(product.category_name || 'Выпечка')}</span>
                 <h3 class="menu-item-name">${escapeHtml(product.name)}</h3>

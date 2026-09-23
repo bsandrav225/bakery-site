@@ -6,14 +6,12 @@ $products = getProducts();
 $categories = getCategories(0);
 $allCategories = getCategories();
 $portfolio = getPortfolio(6);
-$reviews = getReviews(true);
 $promotions = getActivePromotions();
 $articles = getArticles(true);
 
 // Получение страниц для меню и подвала
 $pages = $pdo->query("SELECT * FROM pages WHERE is_visible = 1 ORDER BY sort_order ASC")->fetchAll();
 
-// Отзывы для главной и schema.org
 $homeReviews = $pdo->query("SELECT * FROM reviews WHERE is_approved = 1 AND is_visible = 1 ORDER BY created_at DESC LIMIT 6")->fetchAll();
 
 // Настройки сайта
@@ -27,17 +25,9 @@ $telegram = getSetting('telegram') ?? '@bakery_bot';
 $instagram = getSetting('instagram') ?? '#';
 $vk = getSetting('vk') ?? '#';
 $youtube = getSetting('youtube') ?? '#';
-$mapCenter = getSetting('map_center') ?? '55.7558,37.6173';
-$mapZoom = getSetting('map_zoom') ?? '15';
 
-$seoTitle = getSetting('seo_title') ?? 'Домашний хлеб — пекарня свежей выпечки в Москве | Доставка с 6:00';
-$seoDescription = getSetting('seo_description') ?? 'Семейная пекарня «Домашний хлеб» в Москве: свежий хлеб, булочки и пирожки по семейным рецептам. Натуральные ингредиенты, выпечка несколько раз в день, доставка от 30 минут.';
-$seoKeywords = getSetting('seo_keywords') ?? 'пекарня москва, свежий хлеб, домашняя выпечка, доставка хлеба, булочки, пирожки, семейная пекарня, натуральный хлеб';
-
-$canonicalUrl = rtrim(SITE_URL, '/') . '/';
-$ogImage = getSetting('hero_image') ?? 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1200&h=630&fit=crop';
-$phoneTel = preg_replace('/[^0-9+]/', '', $sitePhone);
-$whatsappDigits = preg_replace('/[^0-9]/', '', $whatsapp);
+$seoTitle = getSetting('seo_title') ?? 'Домашний хлеб — пекарня в Москве';
+$seoDescription = getSetting('seo_description') ?? 'Семейная пекарня: свежий хлеб, булочки и пирожки. Доставка по Москве.';
 
 $faqItems = [
     [
@@ -159,9 +149,7 @@ foreach ($products as $p) {
         'category_id'   => (int)$p['category_id'],
         'category_slug' => $p['category_slug'] ?? '',
         'category_name' => $p['category_name'] ?? 'Выпечка',
-        'image'         => !empty($p['image'])
-            ? SITE_URL . 'uploads/' . $p['image']
-            : 'https://placehold.co/400x300/F5E6D3/8B6B4F?text=' . rawurlencode($p['name']),
+        'image'         => !empty($p['image']) ? SITE_URL . 'uploads/' . $p['image'] : '',
     ];
 }
 
@@ -174,99 +162,9 @@ $homeArticles = array_slice($articles ?: [], 0, 3);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($seoTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDescription) ?>">
-    <meta name="keywords" content="<?= htmlspecialchars($seoKeywords) ?>">
-    <meta name="author" content="<?= htmlspecialchars($siteName) ?>">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
-    <meta name="theme-color" content="#C9A87C">
-    <meta name="geo.region" content="RU-MOW">
-    <meta name="geo.placename" content="Москва">
-    <meta name="format-detection" content="telephone=yes">
-    <link rel="canonical" href="<?= htmlspecialchars($canonicalUrl) ?>">
-
-    <!-- Соцсети -->
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="ru_RU">
-    <meta property="og:site_name" content="<?= htmlspecialchars($siteName) ?>">
-    <meta property="og:title" content="<?= htmlspecialchars($seoTitle) ?>">
-    <meta property="og:description" content="<?= htmlspecialchars($seoDescription) ?>">
-    <meta property="og:url" content="<?= htmlspecialchars($canonicalUrl) ?>">
-    <meta property="og:image" content="<?= htmlspecialchars($ogImage) ?>">
-    <meta property="og:image:alt" content="Свежая выпечка пекарни <?= htmlspecialchars($siteName) ?>">
-
-    <!-- Карточка для Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<?= htmlspecialchars($seoTitle) ?>">
-    <meta name="twitter:description" content="<?= htmlspecialchars($seoDescription) ?>">
-    <meta name="twitter:image" content="<?= htmlspecialchars($ogImage) ?>">
-
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <script type="application/ld+json">
-    <?php
-    $mapParts = array_map('trim', explode(',', (string)$mapCenter));
-    $bakerySchema = [
-        '@context' => 'https://schema.org',
-        '@type' => 'Bakery',
-        'name' => $siteName,
-        'description' => $seoDescription,
-        'url' => $canonicalUrl,
-        'image' => $ogImage,
-        'telephone' => $phoneTel,
-        'email' => $siteEmail,
-        'priceRange' => '₽₽',
-        'servesCuisine' => 'Русская выпечка',
-        'address' => [
-            '@type' => 'PostalAddress',
-            'streetAddress' => $siteAddress,
-            'addressLocality' => 'Москва',
-            'addressCountry' => 'RU',
-        ],
-        'geo' => [
-            '@type' => 'GeoCoordinates',
-            'latitude' => floatval($mapParts[0] ?? 55.7558),
-            'longitude' => floatval($mapParts[1] ?? 37.6173),
-        ],
-        'openingHoursSpecification' => [
-            '@type' => 'OpeningHoursSpecification',
-            'dayOfWeek' => ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-            'opens' => '06:00',
-            'closes' => '22:00',
-        ],
-        'sameAs' => array_values(array_filter([
-            ($instagram && $instagram !== '#') ? $instagram : null,
-            ($vk && $vk !== '#') ? $vk : null,
-            ($youtube && $youtube !== '#') ? $youtube : null,
-        ])),
-    ];
-    if (count($homeReviews) > 0) {
-        $bakerySchema['aggregateRating'] = [
-            '@type' => 'AggregateRating',
-            'ratingValue' => '4.9',
-            'reviewCount' => (string)count($homeReviews),
-            'bestRating' => '5',
-        ];
-    }
-    echo json_encode($bakerySchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
-    ?>
-    </script>
-    <script type="application/ld+json">
-    <?= json_encode([
-        '@context' => 'https://schema.org',
-        '@type' => 'FAQPage',
-        'mainEntity' => array_map(static function ($item) {
-            return [
-                '@type' => 'Question',
-                'name' => $item['q'],
-                'acceptedAnswer' => [
-                    '@type' => 'Answer',
-                    'text' => $item['a'],
-                ],
-            ];
-        }, $faqItems),
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?>
-    </script>
 </head>
 <body>
     <div class="preloader" id="preloader">
@@ -422,7 +320,7 @@ $homeArticles = array_slice($articles ?: [], 0, 3);
                 <div class="about-visual">
                     <div class="about-visual-inner">
                         <?php 
-                        $aboutImage = getSetting('about_image') ?? 'https://avatars.mds.yandex.net/i?id=3993a554e1e754196c9472fb7ed9c1b66e315bbb-4459830-images-thumbs&n=13';
+                        $aboutImage = getSetting('about_image') ?? 'uploads/products/breadmain.jpg';
                         ?>
                         <img src="<?= htmlspecialchars($aboutImage) ?>" alt="Пекарня" loading="lazy">
                         <div class="about-visual-experience">
@@ -513,7 +411,9 @@ $homeArticles = array_slice($articles ?: [], 0, 3);
                 <?php if (count($popularProducts) > 0): ?>
                     <?php foreach ($popularProducts as $product): ?>
                         <div class="menu-item" data-category="<?= htmlspecialchars($product['category_slug'] ?? '') ?>" data-id="<?= (int)$product['id'] ?>">
-                            <img src="<?= !empty($product['image']) ? htmlspecialchars(SITE_URL . 'uploads/' . $product['image']) : 'https://placehold.co/400x300/F5E6D3/8B6B4F?text=' . rawurlencode($product['name']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="menu-item-image" loading="lazy">
+                            <?php if (!empty($product['image'])): ?>
+                            <img src="<?= htmlspecialchars(SITE_URL . 'uploads/' . $product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="menu-item-image" loading="lazy">
+                            <?php endif; ?>
                             <div class="menu-item-content">
                                 <span class="menu-item-tag"><?= htmlspecialchars($product['category_name'] ?? ($categoryMap[$product['category_id']] ?? 'Выпечка')) ?></span>
                                 <h3 class="menu-item-name"><?= htmlspecialchars($product['name']) ?></h3>
@@ -529,43 +429,7 @@ $homeArticles = array_slice($articles ?: [], 0, 3);
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <!-- Если нет товаров в БД, показываем демо-товары -->
-                    <div class="menu-item">
-                        <img src="https://images.unsplash.com/photo-1598373182133-52452f7691ef?w=400&h=300&fit=crop" alt="Белый хлеб" class="menu-item-image">
-                        <div class="menu-item-content">
-                            <span class="menu-item-tag">Хлеб</span>
-                            <h3 class="menu-item-name">Белый хлеб</h3>
-                            <div class="menu-item-price">120 ₽</div>
-                            <button class="menu-item-btn" data-id="1">
-                                <i class="fas fa-plus"></i>
-                                <span>В корзину</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <img src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=400&h=300&fit=crop" alt="Бородинский" class="menu-item-image">
-                        <div class="menu-item-content">
-                            <span class="menu-item-tag">Хлеб</span>
-                            <h3 class="menu-item-name">Бородинский</h3>
-                            <div class="menu-item-price">150 ₽</div>
-                            <button class="menu-item-btn" data-id="2">
-                                <i class="fas fa-plus"></i>
-                                <span>В корзину</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop" alt="С маком" class="menu-item-image">
-                        <div class="menu-item-content">
-                            <span class="menu-item-tag">Булочки</span>
-                            <h3 class="menu-item-name">С маком</h3>
-                            <div class="menu-item-price">85 ₽</div>
-                            <button class="menu-item-btn" data-id="3">
-                                <i class="fas fa-plus"></i>
-                                <span>В корзину</span>
-                            </button>
-                        </div>
-                    </div>
+                    <p style="grid-column:1/-1;text-align:center;color:var(--text-light);padding:40px 0;">Товары появятся после добавления в админке.</p>
                 <?php endif; ?>
             </div>
 

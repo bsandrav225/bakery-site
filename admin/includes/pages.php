@@ -159,7 +159,7 @@ if (isset($_GET['edit'])) {
                                 <a href="?page=pages&edit=<?= $page['id'] ?>" class="btn btn-outline" style="padding:4px 12px;font-size:0.75rem;">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <?php if (!in_array($page['slug'], ['about', 'warranty', 'delivery', 'privacy'])): ?>
+                                <?php if (!in_array($page['slug'], ['about', 'quality', 'delivery', 'privacy'])): ?>
                                     <form method="POST" style="display:inline;" onsubmit="return confirm('Удалить страницу?')">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= $page['id'] ?>">

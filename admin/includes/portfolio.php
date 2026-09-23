@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $slug = slugify($title);
         $description = $_POST['description'] ?? '';
         $category = $_POST['category'] ?? '';
-        $material_id = intval($_POST['material_id'] ?? 0);
         $price_approx = floatval($_POST['price_approx'] ?? 0);
         $is_active = isset($_POST['is_active']) ? 1 : 0;
         $sort_order = intval($_POST['sort_order'] ?? 0);
@@ -25,12 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($title) {
             if ($action === 'add') {
-                $stmt = $pdo->prepare("INSERT INTO portfolio (title, slug, description, category, material_id, image, price_approx, is_active, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$title, $slug, $description, $category, $material_id, $image, $price_approx, $is_active, $sort_order]);
+                $stmt = $pdo->prepare("INSERT INTO portfolio (title, slug, description, category, image, price_approx, is_active, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$title, $slug, $description, $category, $image, $price_approx, $is_active, $sort_order]);
                 flashMessage('Работа добавлена', 'success');
             } else {
-                $stmt = $pdo->prepare("UPDATE portfolio SET title = ?, slug = ?, description = ?, category = ?, material_id = ?, image = ?, price_approx = ?, is_active = ?, sort_order = ? WHERE id = ?");
-                $stmt->execute([$title, $slug, $description, $category, $material_id, $image, $price_approx, $is_active, $sort_order, $id]);
+                $stmt = $pdo->prepare("UPDATE portfolio SET title = ?, slug = ?, description = ?, category = ?, image = ?, price_approx = ?, is_active = ?, sort_order = ? WHERE id = ?");
+                $stmt->execute([$title, $slug, $description, $category, $image, $price_approx, $is_active, $sort_order, $id]);
                 flashMessage('Работа обновлена', 'success');
             }
             redirect('?page=portfolio');
@@ -86,7 +85,6 @@ if (isset($_GET['edit'])) {
             </div>
         </div>
         
-        <input type="hidden" name="material_id" value="<?= $editPortfolio ? (int)$editPortfolio['material_id'] : 0 ?>">
         <div class="form-group">
             <label>Стоимость (₽)</label>
             <input type="number" name="price_approx" step="0.01" value="<?= $editPortfolio ? $editPortfolio['price_approx'] : '' ?>">
