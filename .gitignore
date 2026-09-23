@@ -1,0 +1,13 @@
+/admin/config.local.php
+/.env
+/.env.*
+*.log
+Thumbs.db
+Desktop.ini
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.tmp
+php_errors.log
+/uploads/**/*.php
