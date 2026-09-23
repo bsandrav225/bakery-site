@@ -11,3 +11,5 @@
 Логин `admin`, пароль `admin123`.
 
 Если папка называется иначе, адрес менять не нужно — он определяется сам. Свои данные БД можно прописать в `admin/config.local.php` (образец: `admin/config.example.php`).
+
+Ссылка на Google Диск: https://drive.google.com/drive/folders/1JsBYeqi_S2gR3TwVaQ9mUNYK0jY6pS5l?usp=drive_link
